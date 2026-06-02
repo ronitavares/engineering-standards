@@ -1,0 +1,36 @@
+---
+description: Multi-tenancy standards for tenant context, tenant-aware repositories, and data isolation.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Multi-Tenancy
+
+Tenant isolation is a business invariant, not a controller concern.
+
+## Default Model
+
+- Use row-level tenant isolation unless the project explicitly chooses another strategy.
+- Tenant-scoped entities include `organizationId` or the project-standard tenant key directly.
+- Global reference entities must be explicitly classified as global.
+- Tenant context is extracted once at the request boundary and made available through context storage.
+
+## Repository Rules
+
+- Tenant-scoped entities use a tenant-aware base repository.
+- Global entities use the default base repository.
+- Tenant filtering must be automatic in repositories, not repeated manually in controllers.
+- Custom queries must include tenant constraints for tenant-scoped data.
+
+## Request Rules
+
+- Public tokens/APIs may use a short claim such as `org`.
+- Internal code should use a descriptive tenant key such as `organizationId`.
+- Controllers should not trust tenant IDs supplied in request bodies when authenticated context exists.
+
+## Do Not
+
+- Do not query tenant-scoped data without tenant filtering.
+- Do not infer tenant ownership only through parent joins when direct tenant columns are required.
+- Do not share tenant-scoped entities across bounded contexts.
+- Do not mix global and tenant-scoped behavior in the same repository without explicit rules.

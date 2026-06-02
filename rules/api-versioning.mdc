@@ -1,0 +1,37 @@
+---
+description: API and contract versioning rules for public APIs, internal contracts, DTOs, and events.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# API Versioning
+
+API contracts must evolve without silently breaking consumers.
+
+## Internal Contracts
+
+- Prefer additive-only changes.
+- New response fields should be optional unless every consumer is migrated in the same change.
+- Deprecate fields with `@deprecated` before removal.
+- Do not rename or remove fields without a migration plan and explicit approval.
+- Breaking changes require an ADR or equivalent decision record.
+
+## Public HTTP APIs
+
+- Use URL versioning such as `/v1` and `/v2` for breaking public API changes.
+- Add a new version when a change removes fields, changes field types, changes response structure, removes endpoints, or changes field semantics.
+- Do not create a new version for optional fields, optional query params, or new endpoints.
+- Keep old and new versions side by side for the agreed deprecation period.
+
+## DTO Changes
+
+- New fields on existing request DTOs should be optional by default.
+- Required new request fields are breaking changes.
+- Response DTOs should remain backward compatible unless the endpoint is versioned.
+
+## Event Contracts
+
+- Include event version in the envelope.
+- Consumers must ignore unknown fields.
+- Never remove fields from event payloads without versioning the event.
+- Increment the version when payload semantics or shape changes.

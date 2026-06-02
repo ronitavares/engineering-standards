@@ -1,0 +1,41 @@
+---
+description: Exception handling standards for services, filters, and structured errors.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Exception Handling
+
+Errors should be explicit, structured, and traceable.
+
+## Rules
+
+- Use framework/domain exceptions with a stable `message` and structured `context`.
+- Register a global exception filter in each deployable service.
+- Include correlation/request IDs in logs and error responses when available.
+- Map infrastructure errors to meaningful HTTP or application errors at the boundary.
+- Let unexpected errors bubble to the global filter after logging useful context.
+
+## Preferred Shape
+
+```typescript
+throw new NotFoundException({
+  message: 'Order not found',
+  context: { orderId },
+});
+```
+
+Use:
+
+- `BadRequestException` for invalid input beyond DTO validation.
+- `NotFoundException` for missing resources.
+- `ConflictException` for uniqueness, state, or business conflicts.
+- `ForbiddenException` for authorization failures.
+- `ServiceUnavailableException` for transient downstream failures.
+
+## Do Not
+
+- Do not throw plain `Error` from services or use cases.
+- Do not catch errors only to hide them or return `null`.
+- Do not leak database, SDK, storage, or provider raw errors to API consumers.
+- Do not use inconsistent bare string exception payloads in new code.

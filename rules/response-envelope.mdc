@@ -1,0 +1,52 @@
+---
+description: Optional response envelope standard for public or partner-facing APIs.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Response Envelope
+
+Use a response envelope for public, partner-facing, or gateway APIs that need a stable external contract. Bounded context services may return plain DTOs unless the project standard says otherwise.
+
+## Standard Shape
+
+Successful responses:
+
+```typescript
+{
+  data: T;
+  meta: {
+    request_id: string;
+    timestamp: string;
+    version: string;
+    trace_id?: string;
+  };
+  errors: [];
+}
+```
+
+Error responses:
+
+```typescript
+{
+  data: null;
+  meta: ApiMeta;
+  errors: ErrorItem[];
+}
+```
+
+## Rules
+
+- Controllers return domain/application DTOs; a global interceptor wraps success responses.
+- A global exception filter maps errors into the envelope.
+- `204 No Content` should not return an envelope body.
+- Include request/correlation ID and API version in metadata.
+- Use a stable error-code registry with retryability metadata.
+- Support an explicit opt-out for health checks, webhooks, redirects, files, or streaming endpoints.
+
+## Do Not
+
+- Do not manually wrap each controller response when a global interceptor exists.
+- Do not return persistence entities as `data`.
+- Do not leak raw validation, database, or provider errors in `errors`.
+- Do not apply this rule blindly to internal bounded context APIs if plain DTOs are the local standard.

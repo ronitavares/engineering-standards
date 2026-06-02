@@ -1,0 +1,48 @@
+---
+description: Messaging standards for reliable asynchronous side effects with outbox, inbox, and queues.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Messaging And Outbox
+
+Use messaging for asynchronous side effects, not for synchronous queries.
+
+## When To Use
+
+Use outbox plus queue when:
+
+- a domain write and an event must be atomic;
+- losing the event is unacceptable;
+- another context or external process must react later;
+- eventual consistency is acceptable.
+
+Do not use messaging when:
+
+- the caller needs an immediate answer;
+- the event has no real consumer;
+- latency below the relay interval is required;
+- the work is best-effort telemetry or logging.
+
+## Required Patterns
+
+- Persist outbox entries in the same transaction as the domain change.
+- Relay outbox entries asynchronously to the broker.
+- Use inbox/deduplication for consumers.
+- Make handlers idempotent.
+- Include `eventType`, version, `correlationId`, `causationId`, `occurredAt`, and idempotency key.
+- Use DLQ and reprocessing strategy for poison messages.
+
+## Placement
+
+- Generic messaging infrastructure: `libs/shared/src/messaging`.
+- AWS SQS adapter: `libs/shared/src/messaging/sqs`.
+- Domain event publication: owning bounded context service/use case.
+- Domain event consumption: consumer context handler.
+- Queue/IaC definitions: root `infrastructure/`.
+
+## Naming
+
+- Version event names, such as `ordering.order.created.v1`.
+- Use stable consumer names for inbox deduplication.
+- Use `streamKey` only where ordering matters.

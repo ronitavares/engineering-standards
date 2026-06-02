@@ -1,0 +1,58 @@
+---
+description: Testing expectations for backend feature work and architecture changes.
+globs: **/*.{ts,spec.ts,e2e-spec.ts}
+alwaysApply: false
+---
+
+# Testing Guidelines
+
+Scale tests to the risk and blast radius of the change.
+
+## Core Rule
+
+Test behavior at the layer where the behavior actually happens.
+
+## Test Pyramid
+
+- Unit tests: many, fast, focused on pure business logic.
+- Integration tests: moderate count, focused on persistence, transactions, multi-tenancy, and adapters.
+- E2E tests: few, slower, focused on critical business workflows.
+
+## Minimum Expectations
+
+- State machines, calculations, and pure domain rules should have unit tests.
+- Repositories with custom queries should have integration coverage against a real database when practical.
+- Tenant-aware repositories should be covered by integration tests.
+- Transactional writes should cover rollback behavior for risky flows.
+- Controllers should be tested when request mapping, guards, or response contracts are non-trivial.
+- Public API workflows should have e2e tests when behavior spans multiple services or contexts.
+- Bug fixes should include a regression test when practical.
+
+## Test Placement
+
+- Put unit specs near the code under test.
+- Put e2e specs under the owning app or test project.
+- Put fixtures/factories under explicit test helper folders.
+
+## Review Checklist
+
+- Tests verify behavior, not implementation trivia.
+- Tests cover validation and error paths for risky changes.
+- E2E setup documents required services, env vars, migrations, and seeds.
+- Coverage gaps are called out explicitly when tests are not added.
+
+## Mocking Rules
+
+- Mock external providers, queues, email, and third-party APIs in unit tests.
+- Mock cross-context HTTP clients in unit tests, but cover adapter behavior separately when risky.
+- Do not mock repositories in tests that claim to validate persistence behavior.
+- Do not mock tenant context in tests that validate tenant isolation.
+- Do not mock state machines; test them directly as pure logic.
+
+## Anti-Patterns
+
+- E2E test for every CRUD endpoint.
+- Unit tests that require a database.
+- Integration tests that only verify mocks.
+- Assertions that only check a method was called when final state or returned behavior matters more.
+- Test data without tenant isolation.

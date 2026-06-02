@@ -1,0 +1,34 @@
+---
+description: Architecture anti-patterns to avoid in modular backend projects.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Architecture Anti-Patterns
+
+Avoid these patterns because they weaken modular boundaries, testability, and long-term maintainability.
+
+## Critical
+
+- Cross-context imports: importing implementation code from another bounded context.
+- Duplicate entity names: using generic table/entity names without context prefix.
+- Transactional writes without explicit connection name in multi-connection projects.
+- Direct database access to another context's state.
+
+## High
+
+- Feature modules inside a bounded context: creating one NestJS module per feature instead of one context module.
+- Direct TypeORM repository usage: extending framework repository classes instead of the project base repository.
+- Entities in shared: placing business entities in global shared libraries.
+- Missing tenant filtering in tenant-scoped queries.
+
+## Medium
+
+- Fat controllers: business rules, persistence, or orchestration in controllers.
+- Shared as dumping ground: business rules moved to shared utilities.
+- Over-engineering: state machine, outbox, cache, CQRS, factories, or interfaces without current need.
+- Raw provider leakage: exposing SDK/provider types through domain or public API boundaries.
+
+## Review Rule
+
+When one of these appears, prefer a small local correction over adding a new abstraction. Add a broader abstraction only when it removes real duplication or protects a stable boundary.

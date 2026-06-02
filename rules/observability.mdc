@@ -1,0 +1,32 @@
+---
+description: Observability standards for logs, correlation IDs, metrics, tracing, and health checks.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Observability
+
+Each app, bounded context, and external provider adapter should be observable enough to diagnose failures without reading code.
+
+## Required Signals
+
+- Correlation/request ID propagated through HTTP, events, logs, and error responses.
+- Structured logs with context name, operation, and relevant IDs.
+- Health checks for deployable apps and critical dependencies.
+- Metrics for request count, latency, errors, external calls, queue processing, and retries.
+- Trace IDs when distributed tracing is enabled.
+
+## Context-Level Rules
+
+- Health checks should identify the context and dependency being checked.
+- Logs from context services should include bounded context and feature/operation.
+- Cross-context HTTP clients should log timeout, circuit-breaker, and fallback events.
+- Messaging consumers should log event type, consumer name, idempotency key, and retry/DLQ outcome.
+- External provider adapters should log provider, operation, duration, and normalized error code.
+
+## Do Not
+
+- Do not log secrets, tokens, full card data, passwords, or sensitive PII.
+- Do not rely only on app-level health when a context owns critical persistence or workers.
+- Do not log the same error repeatedly across interceptor, filter, and service without clear ownership.
+- Do not use free-text logs where structured fields are needed for search and alerting.

@@ -1,0 +1,49 @@
+{
+  "name": "engineering-standards",
+  "version": "0.1.0",
+  "description": "Reusable Cursor rules, skills, hooks, scripts, and templates for modular backend engineering standards.",
+  "presets": [
+    {
+      "name": "nestjs-ddd-nx",
+      "description": "NestJS/Nx backend with bounded contexts, feature folders, TypeORM persistence, Swagger, tests, migrations, and seeds.",
+      "rules": [
+        "modular-architecture-principles.mdc",
+        "architecture-guardrails.mdc",
+        "architecture-anti-patterns.mdc",
+        "backend-code-style.mdc",
+        "documentation-governance.mdc",
+        "feature-complexity.mdc",
+        "use-case-pattern.mdc",
+        "cross-context-communication.mdc",
+        "external-integrations.mdc",
+        "messaging-outbox.mdc",
+        "exception-handling.mdc",
+        "multi-tenancy.mdc",
+        "state-machine-lifecycle.mdc",
+        "migration-rules.mdc",
+        "seed-rules.mdc",
+        "api-versioning.mdc",
+        "api-contracts-swagger.mdc",
+        "response-envelope.mdc",
+        "storage-abstraction.mdc",
+        "observability.mdc",
+        "testing-guidelines.mdc"
+      ],
+      "skills": [
+        "technical-codebase-mapping",
+        "new-backend-feature",
+        "use-case-pattern",
+        "external-provider-review",
+        "architecture-review",
+        "migration-review",
+        "seed-review",
+        "api-contract-review"
+      ],
+      "scripts": [
+        "validate-boundaries.sh",
+        "validate-migrations.sh",
+        "validate-seeds.sh"
+      ]
+    }
+  ]
+}

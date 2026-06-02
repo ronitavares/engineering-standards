@@ -1,0 +1,64 @@
+---
+description: Standards for reusable external integration providers and context-specific external adapters.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# External Integrations
+
+External providers that are reusable by multiple applications or bounded contexts belong in a dedicated integrations library. Do not put business-specific providers in `libs/shared`.
+
+## Placement Rules
+
+- Put reusable external providers in `libs/integrations/src/{capability}/{provider}`.
+- Put context-specific adaptation in `domains/{context}/src/infrastructure/external/{capability}`.
+- Put generic technical infrastructure in `libs/shared/src/{messaging|storage|http|observability}`.
+- Put operational infrastructure in root `infrastructure/`.
+
+## Responsibilities
+
+`libs/integrations` may contain:
+
+- provider HTTP clients or SDK wrappers;
+- provider authentication and technical config;
+- raw provider request/response types;
+- provider error mapping;
+- mappers to neutral integration contracts;
+- generic provider retry/circuit-breaker behavior.
+
+`libs/integrations` must not contain:
+
+- bounded context entities;
+- business decisions such as when to charge, approve, refund, issue, or cancel;
+- product-specific pricing, fraud, voucher, order, or customer rules;
+- public API DTOs from an application.
+
+## Context Adaptation
+
+Use `domains/{context}/src/infrastructure/external/{capability}` for:
+
+- selecting a provider for that context;
+- mapping context commands/results to neutral integration inputs/outputs;
+- composing provider calls with context policies;
+- provider-specific configuration that is owned by the context.
+
+## Examples
+
+```txt
+libs/integrations/src/payment/fourall/
+libs/integrations/src/payment/paymee/
+libs/integrations/src/antifraud/clearsale/
+libs/integrations/src/seating/seatsio/
+libs/integrations/src/wallet/google-wallet/
+
+domains/ordering/src/infrastructure/external/payment/
+domains/ordering/src/infrastructure/external/antifraud/
+domains/catalog/src/infrastructure/external/seating/
+```
+
+## Naming
+
+- Use `{provider}-{capability}.provider.ts` for provider implementations.
+- Use `{provider}-{capability}.client.ts` for low-level API clients when separated.
+- Use `{provider}-{capability}.mapper.ts` for provider contract mapping.
+- Use `{provider}-{capability}.types.ts` for provider-specific types.

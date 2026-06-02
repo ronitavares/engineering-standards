@@ -1,0 +1,58 @@
+---
+description: Calibrate feature implementation complexity to avoid premature architecture.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Feature Complexity
+
+Before adding a pattern, answer: what concrete business problem does this solve today?
+
+## Level 1: Simple CRUD
+
+Use when data has no meaningful lifecycle, no cross-context dependency, and no domain events.
+
+Default stack:
+
+`Controller -> Service -> Repository`
+
+Use:
+
+- feature folder structure;
+- lean controller;
+- repository pattern;
+- transaction for writes when needed.
+
+Do not add state machines, outbox events, cross-context HTTP clients, cache, CQRS, or extra factories.
+
+## Level 2: Lifecycle Feature
+
+Use when an entity has statuses and business-controlled transitions.
+
+Default stack:
+
+`Controller -> Service + StateMachine -> Repository`
+
+Add outbox only when another context must react to the state change and eventual consistency is acceptable.
+
+## Level 3: Cross-Context Feature
+
+Use when the feature needs data from another bounded context or must notify another context.
+
+Default stack:
+
+`Controller -> Service -> Repository + HttpClient(query) or Outbox(side effect)`
+
+Rules:
+
+- HTTP is for synchronous data needed during the request.
+- Events/queues are for asynchronous side effects.
+- Circuit breaker is required for cross-context HTTP clients.
+
+## Red Flags
+
+- State machine for active/inactive CRUD.
+- Outbox event with no real consumer.
+- Cache without measured or expected pressure.
+- Interface or factory with one implementation and no replacement need.
+- CQRS or event sourcing without a proven read/write or audit requirement.

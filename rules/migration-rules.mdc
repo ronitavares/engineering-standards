@@ -1,0 +1,32 @@
+---
+description: Migration governance rules separated from seed data workflows.
+globs: **/migrations/**/*.ts
+alwaysApply: false
+---
+
+# Migration Rules
+
+Migrations are schema evolution artifacts. Keep them separate from seeds and data setup workflows.
+
+## Required Practices
+
+- Store migrations under the owning context or app persistence folder.
+- Use timestamped, descriptive migration names.
+- Implement both `up()` and `down()` when the ORM supports rollback.
+- Review generated migrations before committing.
+- Commit migrations with the entity/schema change that requires them.
+- Keep migrations deterministic and environment-independent.
+
+## Prohibited Practices
+
+- Do not insert demo, test, or fixture data in schema migrations.
+- Do not call seed runners from migrations.
+- Do not edit migrations that have already run in a shared or production environment.
+- Do not enable automatic schema sync in production.
+
+## Review Checklist
+
+- The migration only changes schema or required static database structure.
+- Rollback is possible or the irreversible step is explicitly documented.
+- Names and table prefixes match the owning bounded context.
+- The migration command is documented for the project.

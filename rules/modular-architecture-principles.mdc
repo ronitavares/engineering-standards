@@ -1,0 +1,97 @@
+---
+description: The 10 principles for modular architecture in backend projects with apps, bounded contexts, and reusable libraries.
+alwaysApply: true
+---
+
+# The 10 Principles Of Modular Architecture
+
+Use modular architecture to avoid premature microservice complexity while keeping clear boundaries between business domains.
+
+Core philosophy:
+
+- Apps are bootstraps: `apps/` compose modules and contain minimal business logic.
+- Contexts are logic: business rules live in `domains/{context}/`.
+- Organization follows business capabilities, not technical layers.
+- Start modular and extract to services only when operational evidence justifies it.
+
+## 1. Well-Defined Boundaries
+
+- Keep domain logic inside the owning bounded context.
+- Export only public facades, modules, interfaces, DTOs, and stable contracts through `index.ts`.
+- Do not export internal services, repositories, or entities as public APIs.
+- Do not share database entities between modules.
+
+## 2. Composability
+
+- Design contexts as building blocks that can be composed by multiple applications.
+- Keep application modules thin; they should bootstrap and orchestrate context modules.
+- Use dependency injection for composition instead of hard-coded construction.
+
+## 3. Independence
+
+- Each context must be buildable, testable, and deployable through its own application boundary.
+- Communicate through explicit contracts, HTTP clients, events, or messaging.
+- Do not use direct method calls into another bounded context's internals.
+
+## 4. Individual Scale
+
+- Let each context have its own resource configuration.
+- Tune database pools, cache TTLs, workers, and deployment replicas per context.
+- Avoid shared resource bottlenecks that force unrelated contexts to scale together.
+
+## 5. Explicit Communication
+
+- Use well-defined contracts for every inter-context interaction.
+- Prefer HTTP for synchronous queries that need an immediate response.
+- Prefer events or queues for asynchronous side effects.
+- Do not access another context's tables, repositories, entities, or internal DTOs.
+
+## 6. Replaceability
+
+- Hide replaceable implementations behind interfaces, providers, or stable module exports.
+- Avoid exposing concrete infrastructure implementations as module APIs unless they are intentionally reusable libraries.
+- Keep provider-specific details out of business workflows.
+
+## 7. Deployment Independence
+
+- Keep deployment decisions in `apps/`, CI/CD, and root `infrastructure/`.
+- Keep contexts deployment-agnostic and environment-driven.
+- Do not hard-code assumptions about local, container, or cloud deployment inside domain code.
+
+## 8. State Isolation
+
+- Each context owns its schema, connection, migrations, and state transitions.
+- Use context-prefixed entity table names, such as `{context}_{entity}`.
+- Use APIs or events for cross-context data needs.
+- Do not share tables or duplicate entity names across contexts.
+
+## 9. Observability And Monitoring
+
+- Add context-specific logs, metrics, health checks, and correlation identifiers.
+- Make failures attributable to the responsible context or provider.
+- Do not rely only on app-level monitoring when the logic belongs to a context.
+
+## 10. Fail Independence
+
+- Use timeouts, retries, fallbacks, and circuit breakers for inter-context or external calls.
+- Prevent one context or provider outage from cascading across the system.
+- Prefer graceful degradation when the business flow allows it.
+
+## Structural Defaults
+
+```txt
+repo/
+├── apps/                  # bootstraps and app-layer orchestration
+├── domains/{context}/     # bounded context business logic and owned state
+├── libs/shared/           # generic technical infrastructure
+├── libs/integrations/     # reusable external providers
+├── libs/contracts/        # cross-context or public contracts
+└── infrastructure/        # operational infrastructure
+```
+
+## Communication Defaults
+
+- HTTP: synchronous queries and validations that require an immediate answer.
+- SQS/events: asynchronous side effects and fan-out workflows.
+- Outbox: reliable event publishing from transactional writes.
+- External providers: reusable implementation in `libs/integrations`; context adaptation in `domains/{context}/src/infrastructure/external`.

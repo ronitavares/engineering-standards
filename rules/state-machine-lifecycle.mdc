@@ -1,0 +1,42 @@
+---
+description: Lifecycle and state machine standards for entities with status transitions.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# State Machine Lifecycle
+
+Use a state machine only when an entity has meaningful lifecycle transitions with business rules.
+
+## When To Use
+
+Use state machine services when:
+
+- an entity has multiple statuses;
+- not every status can move to every other status;
+- transitions have business rules or permissions;
+- the UI/API needs available transitions;
+- state changes may trigger side effects.
+
+Do not use a state machine for simple active/inactive CRUD or static enums without transition rules.
+
+## Required Structure
+
+- Status enum: stable set of states.
+- Transition enum: named actions that cause state changes.
+- Transitions definition: valid `from` and `to` pairs.
+- State machine service: validates and resolves transitions.
+- Tests: valid transitions, invalid transitions, edge cases.
+
+## Service Rules
+
+- Services/use cases load the aggregate, ask the state machine for the transition, then persist.
+- State machine code should be deterministic and easy to unit test.
+- Side effects belong in application service/use case flow, not hidden inside transition definitions.
+- Emit outbox events only when another context needs to react.
+
+## Do Not
+
+- Do not set lifecycle status directly throughout the codebase.
+- Do not introduce heavy workflow engines unless business complexity proves the need.
+- Do not mix persistence concerns into the state machine service.

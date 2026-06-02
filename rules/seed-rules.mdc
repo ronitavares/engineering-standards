@@ -1,0 +1,32 @@
+---
+description: Seed governance rules separated from database migration workflows.
+globs: **/*seed*.ts
+alwaysApply: false
+---
+
+# Seed Rules
+
+Seeds create or reconcile data. They must be managed separately from migrations.
+
+## Required Practices
+
+- Keep seed scripts in explicit seed folders or journey folders.
+- Make seeds idempotent by checking stable business keys before insert.
+- Wrap multi-step seeds in transactions when possible.
+- Separate foundation/reference seeds from demo, journey, and e2e seeds.
+- Document which environments may run each seed.
+- Make cleanup behavior explicit when cleanup exists.
+
+## Prohibited Practices
+
+- Do not change schema in seeds.
+- Do not rely on migrations to insert demo or e2e data.
+- Do not use random identifiers when a stable key is needed for idempotency.
+- Do not run destructive seed cleanup outside controlled environments.
+
+## Review Checklist
+
+- The seed can run twice without duplicating data.
+- The target environment is clear.
+- The seed depends on migrations having already run.
+- The seed avoids hard-coded production secrets.

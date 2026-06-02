@@ -1,0 +1,45 @@
+---
+description: Rules for communication between bounded contexts without direct coupling.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Cross-Context Communication
+
+Bounded contexts must remain independent. Communicate through explicit contracts, not internal imports or shared entities.
+
+## Decision Guide
+
+Use HTTP when:
+
+- the caller needs data immediately;
+- validation must happen during the current request;
+- the operation is a query or synchronous check.
+
+Use events or queues when:
+
+- another context must react to something that already happened;
+- eventual consistency is acceptable;
+- multiple consumers may need the same notification;
+- the work can be retried independently.
+
+## Required Patterns
+
+- Define stable request/response contracts.
+- Keep HTTP clients in context-level infrastructure/adapters.
+- Add timeouts and circuit breakers to cross-context HTTP calls.
+- Include correlation IDs in outgoing calls and events.
+- Make event consumers idempotent.
+
+## Prohibited Patterns
+
+- Importing services, repositories, entities, or internal DTOs from another context.
+- Querying another context's database tables.
+- Using queues for operations that need an immediate response.
+- Using synchronous HTTP for fire-and-forget side effects.
+
+## Placement
+
+- Cross-context contracts: `libs/contracts`.
+- Generic HTTP infrastructure: `libs/shared/src/http`.
+- Context-specific clients/adapters: `domains/{context}/src/infrastructure/external` or equivalent local convention.

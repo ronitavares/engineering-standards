@@ -1,0 +1,47 @@
+---
+description: Storage abstraction rules for S3-compatible object storage and context-specific file use cases.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Storage Abstraction
+
+Object storage is generic technical infrastructure. Business-specific file handling belongs in the owning app or bounded context.
+
+## Placement
+
+- Generic storage interface: `libs/shared/src/storage`.
+- AWS S3 implementation: `libs/shared/src/storage/s3`.
+- Context-specific file orchestration: `domains/{context}/src/infrastructure/storage`.
+- Bucket, CDN, lifecycle rules, IAM, and CORS: root `infrastructure/`.
+
+## Interface Rules
+
+- Expose provider-agnostic operations such as put, get, stream, head, delete, and presigned URL creation.
+- Hide AWS SDK types behind project types.
+- Prefer pre-signed URLs for large uploads/downloads.
+- Use dependency injection tokens or interfaces to keep S3 replaceable.
+- Map storage/provider errors to stable application errors.
+
+## Key Convention
+
+Use tenant-aware, context-scoped keys:
+
+```txt
+tenants/{tenantId}/{context}/{feature}/{resourceId}/{filename}
+```
+
+Examples:
+
+```txt
+tenants/org-123/ordering/vouchers/voucher-456/qrcode.png
+tenants/org-123/catalog/imports/job-789/events.csv
+```
+
+## Security
+
+- Buckets are private by default.
+- Access is time-limited through pre-signed URLs.
+- Enable encryption at rest.
+- Validate content type, size, and checksum where relevant.
+- Do not persist secrets or raw credentials in code.

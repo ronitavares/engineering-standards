@@ -1,0 +1,38 @@
+---
+description: Architecture guardrails for modular backend projects with bounded contexts and feature folders.
+alwaysApply: true
+---
+
+# Architecture Guardrails
+
+Use bounded contexts as the primary ownership boundary. Application services may compose contexts, but one bounded context must not import implementation code from another bounded context.
+
+These guardrails operationalize `modular-architecture-principles.mdc`. When in doubt, the 10 Principles of Modular Architecture are the source of truth.
+
+## Required Structure
+
+- Put deployable applications under `apps/`.
+- Put business contexts under `domains/{context}/`.
+- Put reusable external integration providers under `libs/integrations/`.
+- Put generic technical infrastructure under `libs/shared/`.
+- Use one NestJS module per bounded context: `domains/{context}/src/{context}.module.ts`.
+- Organize features as vertical folders: `{feature}/core`, `{feature}/http`, `{feature}/persistence`.
+- Keep entities and repositories inside the owning feature folder.
+- Keep context-level runtime adapters in `domains/{context}/src/infrastructure/`.
+- Keep context-level shared code in `domains/{context}/src/shared/`.
+- Keep cross-context contracts in a contracts/shared package, not inside a domain.
+- Use `core/use-case` for non-trivial application workflows when it clarifies orchestration and transaction boundaries.
+
+## Prohibited Patterns
+
+- Do not create one NestJS module per feature inside a bounded context.
+- Do not import directly from another bounded context.
+- Do not inject repositories into controllers.
+- Do not place business entities in global shared folders.
+- Do not use shared as a dumping ground for business rules.
+- Do not put reusable external providers in a bounded context if multiple apps or contexts can use them.
+- Do not put provider-specific business rules in `libs/integrations`.
+
+## Expected Request Flow
+
+`HTTP request -> controller -> DTO validation -> guard/auth -> use case or service -> domain logic -> repository -> database -> response DTO`

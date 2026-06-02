@@ -1,0 +1,40 @@
+---
+description: Backend code style and implementation rules for NestJS TypeScript projects.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Backend Code Style
+
+Follow the local project conventions first. When no local convention exists, use these defaults.
+
+## Naming
+
+- Files: `kebab-case`.
+- Classes: `PascalCase`.
+- Services: `*Service`.
+- Controllers: `*Controller`.
+- DTOs: `*Dto`.
+- Repositories: `*Repository`.
+- Database tables: `{context}_{entity}`.
+- Database columns: `snake_case`; TypeScript properties: `camelCase`.
+
+## Controllers
+
+- Extract request data.
+- Apply guards/decorators.
+- Call a service.
+- Return a response DTO.
+- Do not contain business rules or repository calls.
+
+## Services
+
+- Hold application/domain logic.
+- Use repositories for persistence.
+- Use explicit transactions for writes when the stack supports it.
+- Prefer clear invariants over defensive fallback logic.
+
+## Errors
+
+- Throw framework/domain exceptions with structured context.
+- Do not throw plain `Error` from domain/application services unless the project explicitly allows it.

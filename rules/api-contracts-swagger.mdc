@@ -1,0 +1,29 @@
+---
+description: REST API contract and Swagger/OpenAPI documentation standards.
+globs: **/*.{controller,dto}.ts
+alwaysApply: false
+---
+
+# API Contracts And Swagger
+
+Treat the API contract as a product surface. Controllers, DTOs, and response schemas should be explicit and stable.
+
+## Controllers
+
+- Use `@ApiTags` for every controller.
+- Use `@ApiOperation` for public or partner-facing endpoints.
+- Use `@ApiResponse` or project-specific response decorators for success and error cases.
+- Mark authentication requirements with the appropriate Swagger auth decorator.
+- Keep controllers thin; mapping should happen in response DTOs or mappers.
+
+## DTOs
+
+- Pair validation decorators with Swagger property decorators.
+- Include examples for public API fields.
+- Use `enum`, `format`, `nullable`, and array metadata when relevant.
+- Do not reuse persistence entities as response DTOs.
+
+## Versioning
+
+- Do not introduce breaking response shape changes without documenting versioning impact.
+- Prefer additive changes for stable APIs.

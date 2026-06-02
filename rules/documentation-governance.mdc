@@ -1,0 +1,33 @@
+---
+description: Documentation governance for intent, decisions, knowledge, and evolution files.
+alwaysApply: false
+---
+
+# Documentation Governance
+
+Keep project documentation useful for humans and AI agents by separating intent, decisions, implementation knowledge, and evolution history.
+
+## Document Types
+
+- `docs/intent/`: WHAT the product or feature does and WHY it matters. Do not include implementation details.
+- `docs/decisions/`: HOW a non-trivial technical decision was made, including rationale and alternatives.
+- `docs/knowledge/patterns/`: HOW TO IMPLEMENT reusable patterns.
+- `docs/knowledge/anti-patterns/`: implementation shapes to avoid.
+- `docs/knowledge/guides/`: step-by-step guides.
+- `docs/knowledge/reference/`: broad reference material, diagrams, and glossaries.
+- `docs/evolution/`: relevant changes, outcomes, and learnings.
+
+## Rules
+
+- Create an ADR before implementing non-trivial architecture, integration, persistence, security, or API contract decisions.
+- Use one canonical source per topic; other files should link to it instead of duplicating content.
+- Add a `Status` section to durable docs: `Created`, `Status`, and `Note`.
+- Link related intent, decisions, patterns, anti-patterns, and implementation files.
+- Update context docs and changelog when functionality or standards change.
+
+## Do Not
+
+- Put technical implementation details in intent files.
+- Turn root `README.md`, `AGENTS.md`, or rules into encyclopedias.
+- Duplicate pattern explanations across multiple files.
+- Create docs for trivial changes where no reusable knowledge or decision exists.

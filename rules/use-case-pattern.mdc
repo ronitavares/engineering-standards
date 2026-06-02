@@ -1,0 +1,50 @@
+---
+description: Use Case Pattern standards for application workflows in modular backend projects.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Use Case Pattern
+
+Use cases represent application workflows. They coordinate validation, domain services, repositories, transactions, external clients, and response mapping for a specific business action.
+
+## When To Use
+
+- Use a use case when a feature action has orchestration across multiple repositories, services, external clients, transactions, or domain rules.
+- Use a use case for public API workflows where the business action deserves a named application boundary.
+- Keep simple CRUD in a service when the action is a thin repository operation with minimal business logic.
+
+## Recommended Structure
+
+```txt
+domains/{context}/src/{feature}/
+├── core/
+│   ├── service/
+│   └── use-case/
+│       └── {action}-{feature}.use-case.ts
+├── http/rest/controller/
+├── http/rest/dto/
+└── persistence/
+```
+
+## Rules
+
+- Controllers call a use case or service, never a repository.
+- A use case should expose one main `execute()` method.
+- A use case should be named by business action, not technical operation.
+- A use case may depend on domain services, repositories, mappers, event publishers, and integration clients.
+- Put transaction boundaries in the use case when the workflow spans multiple writes.
+- Keep reusable business policies in domain services; do not bury shared domain rules inside one use case.
+
+## Naming Examples
+
+- `create-order.use-case.ts`
+- `publish-event.use-case.ts`
+- `confirm-payment.use-case.ts`
+- `invite-member.use-case.ts`
+
+## Avoid
+
+- Do not create use cases for every trivial getter by default.
+- Do not let use cases become large god classes.
+- Do not put HTTP decorators, Swagger metadata, or request-specific concerns in use cases.
