@@ -1,0 +1,43 @@
+---
+description: Zod usage rules for NestJS DTOs, external payloads, config validation, frontend forms, and runtime schemas.
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Zod Usage
+
+Use `class-validator` as the default validation standard for NestJS HTTP DTOs and internal backend contracts. Use Zod only where runtime schema parsing is a better fit.
+
+## Default For NestJS
+
+- Use `class-validator` and `class-transformer` for NestJS controller request DTOs.
+- Pair DTO validation decorators with Swagger/OpenAPI decorators.
+- Keep DTO classes compatible with the project's global `ValidationPipe`.
+- Do not replace NestJS DTOs with Zod schemas or `createZodDto` unless the project has explicitly adopted that pattern.
+
+## Allowed Zod Use Cases
+
+- Validate webhook payloads and external provider callbacks before processing them.
+- Validate `process.env` or typed runtime configuration during application startup.
+- Validate frontend forms in frontend applications, commonly with React Hook Form and a Zod resolver.
+- Validate parsed JSON, config files, metadata blobs, or other non-DTO runtime data.
+- Infer TypeScript types from Zod schemas only when the schema is the runtime source of truth.
+
+## Internal Contracts
+
+- Use the project's contract package and established validation standard for cross-context DTOs, events, and service-to-service contracts.
+- Do not introduce Zod as a parallel contract model for internal backend communication.
+- Contract changes must still follow API/event versioning and contract testing rules.
+
+## Error Handling
+
+- Prefer `safeParse` when invalid external input should be converted into a controlled application error.
+- Do not log raw provider payloads, secrets, tokens, or unnecessary PII when reporting Zod validation errors.
+- Map validation failures to project-standard exceptions and response envelopes.
+
+## Placement
+
+- Environment schemas: `libs/shared/src/config` or the project's established config package.
+- Webhook schemas: the owning integration or context adapter.
+- Frontend form schemas: the owning frontend app feature.
+- Runtime data schemas: near the parser/adapter that owns the data shape.

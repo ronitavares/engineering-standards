@@ -37,6 +37,12 @@ Review for real risks and inconsistencies. Findings should lead the response and
 - Public API changes follow API versioning and response contract rules.
 - Object storage uses a shared abstraction with context-specific orchestration.
 - Health checks, logs, metrics, and correlation IDs cover apps, contexts, messaging, and providers.
+- Security/auth boundaries, RBAC/ABAC policies, rate limits, CORS, and request hardening are explicit.
+- Config, secrets, feature flags, and environment-specific values are validated and governed.
+- Personal data handling follows privacy/LGPD retention, masking, audit, and access rules.
+- Cache, pagination, query shape, and performance budgets are documented for high-volume paths.
+- Jobs and scheduled tasks have clear ownership, idempotency, locking, retries, and observability.
+- CI/CD gates cover affected checks, dependency scanning, and cross-context contract tests where needed.
 - Shared code is not accumulating business rules.
 - Reusable external providers live in `libs/integrations`, not in `libs/shared` or one bounded context when multiple apps/contexts can use them.
 - Context-specific external adapters live under `domains/{context}/src/infrastructure/external`.

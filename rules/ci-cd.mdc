@@ -1,0 +1,36 @@
+---
+description: CI/CD, dependency management, vulnerability scanning, and contract testing standards.
+alwaysApply: true
+---
+
+# CI/CD And Dependency Governance
+
+CI is part of the architecture contract. A change is not ready until the pipeline proves the relevant quality gates.
+
+## Pipeline Gates
+
+- Run formatting, linting, type checks, unit tests, and affected integration/e2e tests before merge.
+- Run migrations or schema validation when persistence changes.
+- Publish build artifacts from CI, not local machines.
+- Keep deployment steps repeatable and environment-specific config outside the artifact.
+- Block merge on failing required checks unless there is an explicit incident exception.
+
+## Dependencies
+
+- Commit and respect the package manager lockfile.
+- Use workspace package commands for internal dependencies in monorepos.
+- Pin runtime base images and critical infrastructure versions.
+- Review major upgrades separately from feature changes.
+- Remove unused dependencies when deleting code paths.
+
+## Security Scanning
+
+- Scan application dependencies, container images, and infrastructure manifests where applicable.
+- Treat critical and high vulnerabilities as release blockers unless documented as non-exploitable.
+- Keep audit suppressions narrow, dated, and linked to a follow-up.
+
+## Contract Testing
+
+- Add consumer-driven or provider contract tests for cross-context APIs, events, and partner-facing contracts with independent release cadence.
+- Contract tests should validate required fields, versioning rules, error shapes, and backward-compatible additive changes.
+- Run contract verification in CI for changed consumers or providers.

@@ -1,0 +1,38 @@
+---
+description: Performance, caching, pagination, query efficiency, and scalability standards.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Caching And Performance
+
+Optimize around measured bottlenecks and stable access patterns. Cache only when freshness, invalidation, and ownership are clear.
+
+## Pagination And Query Shape
+
+- Paginate list endpoints by default when result size is unbounded.
+- Prefer cursor pagination for large or frequently changing datasets.
+- Define maximum page size and stable ordering for every paginated endpoint.
+- Avoid N+1 queries; use explicit joins, batching, or read models where appropriate.
+- Add indexes for high-cardinality filters, joins, unique lookups, and ordering used by production queries.
+
+## Caching Rules
+
+- Cache reads that are expensive, high-volume, and tolerate bounded staleness.
+- Define cache key, TTL, invalidation trigger, and owner before adding a cache.
+- Include tenant, locale, permission scope, and version in cache keys when they affect the response.
+- Use negative caching only for short-lived, safe cases.
+- Do not cache authorization decisions without explicit expiry and subject/resource scoping.
+
+## Performance Budgets
+
+- Set latency and throughput expectations for public APIs, workers, and provider calls.
+- Add timeouts, retries, and circuit breakers for remote dependencies.
+- Measure before broad refactors; use logs, metrics, traces, query plans, or profiling evidence.
+
+## Anti-Patterns
+
+- Caching mutable business state without invalidation.
+- Returning unbounded lists.
+- Using database offsets for deep pagination on large tables.
+- Adding fallback queries that hide missing indexes or broken data ownership.

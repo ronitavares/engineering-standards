@@ -1,0 +1,34 @@
+---
+description: Data privacy, LGPD, PII handling, retention, anonymization, and audit standards.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Data Privacy LGPD
+
+Personal data handling must be intentional, minimal, traceable, and compatible with LGPD obligations.
+
+## Classification
+
+- Identify personal data, sensitive personal data, payment data, credentials, and business-confidential data before designing storage or logs.
+- Keep the purpose and legal basis for personal data processing documented at the feature or domain level.
+- Minimize collected fields to what the workflow actually needs.
+
+## Storage And Access
+
+- Encrypt sensitive data at rest when supported by the platform or database.
+- Restrict access to personal data through explicit authorization policies.
+- Do not copy PII into shared tables, analytics payloads, queues, or logs without a documented purpose.
+- Tokenize or mask payment, document, phone, and email data when full value is not required.
+
+## Retention And Deletion
+
+- Define retention rules for personal data, audit logs, exports, and provider callbacks.
+- Support anonymization or deletion workflows when legally required and technically safe.
+- Avoid indefinite retention of raw third-party payloads.
+
+## Observability And Exports
+
+- Logs must not include passwords, tokens, full card data, full identity documents, or unnecessary PII.
+- Data exports should be audited and limited to authorized roles.
+- Test fixtures and seed data must not contain real customer data.

@@ -1,6 +1,6 @@
 # Engineering Standards Pack
 
-Reusable development standards for backend projects that follow modular architecture, bounded contexts, feature folders, feature complexity calibration, TypeScript, NestJS, relational persistence, messaging/outbox, multi-tenancy, reusable external integrations, storage abstraction, REST APIs, API versioning, Swagger/OpenAPI, response contracts, observability, migrations, seeds, automated tests, documentation governance, and technical governance.
+Reusable development standards for backend projects that follow modular architecture, bounded contexts, feature folders, feature complexity calibration, TypeScript, NestJS, relational persistence, messaging/outbox, multi-tenancy, reusable external integrations, storage abstraction, REST APIs, API versioning, Swagger/OpenAPI, response contracts, observability, security/auth, configuration and secrets, privacy/LGPD, caching/performance, jobs/scheduling, CI/CD, migrations, seeds, automated tests, documentation governance, language consistency, and technical governance.
 
 This package is intentionally framework-aware but project-agnostic. Copy or sync the relevant files into each repository, then adapt only the project-specific names, paths, commands, and bounded contexts.
 
@@ -46,10 +46,18 @@ The initial preset targets:
 - Storage abstraction under `libs/shared/src/storage`.
 - API versioning and response envelope for public/gateway APIs.
 - Context-aware observability.
+- Production security, authentication, authorization, and request hardening.
+- Typed configuration, secrets governance, and feature flags.
+- Data privacy and LGPD-oriented handling of personal data.
+- Caching, pagination, performance budgets, and query efficiency.
+- Background jobs and scheduled task governance.
+- CI/CD gates, dependency governance, vulnerability scanning, and contract testing.
 - TypeORM or equivalent relational persistence.
 - Separate migration and seed governance.
 - Swagger/OpenAPI documentation.
 - Jest/e2e testing.
+- English-by-default language consistency, with explicit support for user-requested output in another language.
+- Zod usage boundaries for external payloads, config validation, frontend forms, and runtime schemas.
 
 ## Core Principle
 
@@ -60,6 +68,7 @@ Rules describe what must always be true. Skills describe how to perform repeatab
 The first evolution batch adds reusable standards extracted from project docs:
 
 - `documentation-governance.mdc`
+- `language-consistency.mdc`
 - `feature-complexity.mdc`
 - `cross-context-communication.mdc`
 - `messaging-outbox.mdc`
@@ -74,9 +83,31 @@ The second evolution batch adds more specific standards that should be enabled w
 
 - `api-versioning.mdc`
 - `response-envelope.mdc`
+- `zod-usage.mdc`
 - `storage-abstraction.mdc`
 - `observability.mdc`
 - enhanced `testing-guidelines.mdc`
+
+## Production Readiness Batch
+
+The production readiness batch turns the package from an architectural core into a fuller end-to-end backend standard:
+
+- `security-authn-authz.mdc`
+- `configuration-secrets.mdc`
+- `ci-cd.mdc`
+- `data-privacy-lgpd.mdc`
+- `caching-performance.mdc`
+- `jobs-scheduling.mdc`
+
+## Boundary Validation
+
+`scripts/validate-boundaries.sh` accepts project-specific bounded contexts and package scope:
+
+```bash
+scripts/validate-boundaries.sh . identity,catalog,sales,ordering @funbe
+```
+
+The same values can be provided through `ENGINEERING_STANDARDS_CONTEXTS` and `ENGINEERING_STANDARDS_PACKAGE_SCOPE`. When contexts are not provided, the script derives them from `domains/{context}` directories.
 
 ## Modular Architecture
 

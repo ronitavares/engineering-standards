@@ -1,0 +1,36 @@
+---
+description: Background jobs, scheduled tasks, idempotency, retries, and worker operational standards.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Jobs And Scheduling
+
+Background work is production behavior. Jobs and schedules need the same ownership, observability, and failure rules as request paths.
+
+## Ownership
+
+- Put job handlers in the bounded context that owns the business decision.
+- Keep generic queue, scheduler, and locking infrastructure in shared infrastructure.
+- Name jobs by context, feature, and operation.
+- Document schedule, owner, expected duration, and failure impact for recurring jobs.
+
+## Execution Rules
+
+- Make job handlers idempotent when retries are possible.
+- Use explicit deduplication keys for jobs triggered by events or external callbacks.
+- Protect scheduled jobs with distributed locks when more than one worker instance can run them.
+- Bound batch sizes and persist progress for long-running work.
+
+## Failure Handling
+
+- Configure retry limits, backoff, and dead-letter behavior.
+- Alert on repeated failures, stale queues, missed schedules, and DLQ growth.
+- Include correlation ID, job ID, tenant ID when applicable, and attempt count in logs.
+- Do not swallow job errors without recording final outcome.
+
+## Testing
+
+- Unit test pure job decisions.
+- Integration test persistence, locking, idempotency, and retry-sensitive behavior when risky.
+- Use e2e coverage for critical scheduled workflows that affect money, access, or customer communication.

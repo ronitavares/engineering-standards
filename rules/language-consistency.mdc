@@ -1,0 +1,28 @@
+---
+description: Language consistency standard for code, documentation, comments, commits, and generated artifacts.
+alwaysApply: true
+---
+
+# Language Consistency
+
+Use English as the default language for repository artifacts unless the user or project explicitly requests another language.
+
+## Default Rule
+
+- Write code identifiers, filenames, folders, comments, tests, commit messages, documentation, rules, skills, templates, scripts, and examples in English.
+- Do not mix English and another language in the same artifact without a deliberate reason.
+- Keep domain vocabulary in English even when business stakeholders use another language, unless the project has approved canonical domain terms in that language.
+- Prefer one consistent spelling and terminology set across APIs, DTOs, events, logs, docs, and tests.
+
+## Allowed Exceptions
+
+- Generate content in another language when the user explicitly asks for it, such as Brazilian Portuguese (`pt-BR`).
+- Preserve legal names, product names, provider field names, user-facing copy, and third-party contract terms in their required language.
+- Keep localized user-facing messages in locale-specific files or translation resources, not scattered through application logic.
+
+## Review Checklist
+
+- New files and changed text use English by default.
+- User-requested non-English output is consistently written in the requested language.
+- No artifact mixes languages accidentally.
+- Localized text is isolated behind the project's i18n or content-management pattern.

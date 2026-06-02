@@ -14,7 +14,8 @@ Review the API as a stable contract, not just code.
 3. Check success and error responses.
 4. Confirm auth requirements are represented in Swagger.
 5. Check whether response envelope, pagination, and API versioning rules apply.
-6. Identify breaking changes and whether versioning or migration notes are needed.
+6. Check rate limits, CORS exposure, sensitive fields, and PII masking for public or partner APIs.
+7. Identify breaking changes and whether versioning, contract tests, or migration notes are needed.
 
 ## Checklist
 
@@ -28,6 +29,7 @@ Review the API as a stable contract, not just code.
 - Public breaking changes use URL versioning or an approved migration plan.
 - Existing request DTOs do not gain required fields without versioning.
 - Event contracts include versioning and tolerate unknown fields.
+- Cross-context or partner-facing contracts have consumer/provider test coverage when independently released.
 - Public/gateway APIs use the response envelope when the project standard requires it.
 
 ## Output

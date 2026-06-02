@@ -1,0 +1,38 @@
+---
+description: Security, authentication, authorization, and request hardening standards for production backends.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Security AuthN/AuthZ
+
+Security is a first-order architecture concern. Public endpoints, partner APIs, workers, and internal adapters must make trust boundaries explicit.
+
+## Authentication
+
+- Require authentication by default for non-public endpoints.
+- Document public endpoints explicitly with a `Public` or equivalent decorator.
+- Validate JWT signature, issuer, audience, expiration, and token type.
+- Do not trust user, tenant, role, or permission claims until the auth layer has verified the token.
+- Keep token parsing in guards/middleware, not controllers or services.
+
+## Authorization
+
+- Use RBAC for coarse-grained capabilities and ABAC/policy checks when access depends on ownership, tenant, status, region, or resource attributes.
+- Enforce tenant boundaries in authorization and persistence access.
+- Keep authorization checks close to the use case or policy layer when business state affects the decision.
+- Do not authorize only in the frontend or only through route visibility.
+
+## Request Hardening
+
+- Validate and transform DTOs before reaching application logic.
+- Apply rate limiting to public, auth, webhook, search, and write-heavy endpoints.
+- Restrict CORS origins, methods, and credentials per environment.
+- Sanitize user-controlled content before rendering, querying, logging, or forwarding to third parties.
+- Use OWASP Top 10 as the review baseline for public API changes.
+
+## Sensitive Operations
+
+- Require explicit audit logs for login, permission changes, account changes, payment operations, exports, and admin actions.
+- Never log passwords, secrets, JWTs, refresh tokens, full card data, or raw identity documents.
+- Prefer deny-by-default policies when a permission mapping is missing.
