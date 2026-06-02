@@ -1,0 +1,37 @@
+---
+description: Backend implementation rules for NestJS, bounded contexts, feature folders, and TypeScript code.
+globs: **/*.ts
+alwaysApply: false
+---
+
+# Backend Architecture Patterns
+
+Apply the Engineering Standards when changing TypeScript backend code, especially NestJS or Nx-style monorepos.
+
+## Structure
+
+- Use one NestJS module per bounded context: `domains/{context}/src/{context}.module.ts`.
+- Organize non-trivial features vertically with `core`, `http`, and `persistence` folders.
+- Keep controllers thin: request parsing, validation, auth/guards, and delegation only.
+- Put orchestration and transaction boundaries in services or use cases; use a named `execute()` use case when workflow complexity warrants it.
+- Keep entities and repositories inside the owning context or feature.
+
+## Complexity Calibration
+
+- Start simple for CRUD-like features.
+- Add use cases for multi-step workflows, external calls, transactions, or meaningful branching.
+- Add state machines only when transitions have real business rules.
+- Add outbox/inbox, queues, caching, or circuit breakers only when the reliability/performance need is explicit.
+
+## Boundaries
+
+- Do not import another bounded context's internal services, repositories, entities, DTOs, or feature folders.
+- Use contracts, HTTP clients, events, or queues for cross-context communication.
+- Do not expose database entities as API DTOs or public contracts.
+- Keep provider-specific SDK code reusable in `libs/integrations/`; context-specific provider selection belongs in the domain adapter.
+
+## Data And Errors
+
+- Use context-prefixed tables such as `{context}_{entity}`.
+- Keep tenant filtering in repository/data-access paths, not in request bodies.
+- Throw structured project exceptions and preserve causes; avoid plain `Error` for domain/application failures.

@@ -1,0 +1,30 @@
+---
+description: Core Engineering Standards guidance for modular backend projects.
+alwaysApply: true
+---
+
+# Engineering Standards Core
+
+Use this repository as a reusable standards pack for backend projects. Rules define durable constraints, skills define repeatable workflows, hooks/scripts enforce high-risk checks, and templates document expected outputs.
+
+## Default Direction
+
+- Prefer modular architecture over premature microservices.
+- Keep deployable bootstraps in `apps/` and business logic in `domains/{context}/`.
+- Put reusable external providers in `libs/integrations/` and generic technical infrastructure in `libs/shared/`.
+- Use `libs/contracts/` or equivalent shared contract packages for cross-context contracts.
+- Keep `rules/` as the source package for reusable Cursor rules; copy selected files into target repositories under `.cursor/rules/`.
+
+## Always Preserve
+
+- Bounded contexts own their entities, repositories, migrations, and state transitions.
+- Contexts communicate through explicit contracts, HTTP clients, events, or queues.
+- Apps compose context modules but do not contain business rules.
+- Documentation, rules, skills, scripts, examples, comments, commits, and generated artifacts default to English unless the user explicitly requests another language.
+
+## Avoid
+
+- Cross-context imports of implementation code.
+- Shared folders that accumulate business rules.
+- Repository access from controllers.
+- Provider-specific business decisions inside `libs/integrations/`.

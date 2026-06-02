@@ -1,0 +1,33 @@
+---
+description: Documentation governance for standards, architecture notes, ADRs, guides, and project knowledge.
+globs: **/*.md
+alwaysApply: false
+---
+
+# Documentation Governance
+
+Keep documentation useful for humans and AI agents by separating intent, decisions, implementation knowledge, and evolution history.
+
+## Document Types
+
+- `docs/intent/`: product or feature intent, what it does, and why it matters.
+- `docs/decisions/`: ADRs and decision records for non-trivial technical choices.
+- `docs/knowledge/patterns/`: reusable implementation patterns.
+- `docs/knowledge/anti-patterns/`: implementation shapes to avoid.
+- `docs/knowledge/guides/`: step-by-step procedures.
+- `docs/knowledge/reference/`: reference material, diagrams, and glossaries.
+- `docs/evolution/`: relevant changes, outcomes, and learnings.
+
+## Rules
+
+- Create an ADR before implementing non-trivial architecture, integration, persistence, security, or API contract decisions.
+- Keep one canonical source per topic and link to it instead of duplicating explanations.
+- Add durable metadata such as `Created`, `Status`, and `Note` when a document is expected to live beyond one task.
+- Update related docs when standards, behavior, or supported workflows change.
+- Write documentation in English by default unless the user asks for another language.
+
+## Avoid
+
+- Putting implementation details in intent docs.
+- Turning the root `README.md`, `AGENTS.md`, or rules into encyclopedias.
+- Creating permanent docs for trivial changes with no reusable decision or knowledge.

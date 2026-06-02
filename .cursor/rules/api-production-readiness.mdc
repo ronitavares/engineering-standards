@@ -1,0 +1,38 @@
+---
+description: API, observability, security, configuration, privacy, performance, jobs, and CI expectations.
+globs: **/*.{ts,js,json,yml,yaml,env}
+alwaysApply: false
+---
+
+# API And Production Readiness
+
+Use these checks for production-facing backend changes, public APIs, jobs, configuration, and operational code.
+
+## APIs And Contracts
+
+- Version public breaking API changes with URL versions such as `/v1` and `/v2`.
+- Keep internal contract evolution additive when possible.
+- Pair DTO validation with Swagger/OpenAPI metadata on public controllers.
+- Prefer a consistent public response envelope only when the API surface needs it.
+- Use Zod for runtime JSON boundaries such as webhooks, config, frontend forms, or external payloads; keep Nest DTOs on `class-validator` unless the project standard says otherwise.
+
+## Security And Privacy
+
+- Require authentication by default and make authorization deny-by-default.
+- Use RBAC/ABAC where business access rules differ by role, tenant, or resource ownership.
+- Never log secrets, tokens, credentials, or unnecessary PII.
+- Classify PII, minimize collection, and define retention/deletion behavior for personal data.
+
+## Operations
+
+- Validate configuration at startup with typed schemas.
+- Store secrets in secret managers or CI secret stores, not in committed files.
+- Add correlation IDs to logs, metrics, traces, and cross-service calls.
+- Use pagination by default for list endpoints.
+- Give caches explicit TTLs, invalidation rules, owners, and observability.
+- Make jobs idempotent and give retries a dead-letter or alerting strategy.
+
+## CI/CD
+
+- Keep lockfiles committed and deterministic.
+- Gate changes with lint, type checks, tests, migration checks, vulnerability scanning, and contract tests where applicable.
